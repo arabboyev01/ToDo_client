@@ -4,23 +4,39 @@ import { FieldType } from "../types/types"
 import CustomRouter from "../hooks/customRoute"
 import Loader from "../hooks/Loader"
 
-type AuthProps = { children: ReactNode }
+type AuthProps = { children: ReactNode, role: string }
 
-export default function AuthComponent({ children }: AuthProps) {
-    const { isError, isLoading, error } = GetMethod<FieldType>('user')
+export default function AuthComponent({ children, role }: AuthProps) {
+    const { isError, isLoading, error, data } = GetMethod<FieldType>('user')
     const { navigate } = CustomRouter()
+    console.log(data?.data.data.role)
 
     useEffect(() => {
         if (isError && error) {
-            const status = (error as any)?.response?.status
+            const status = (error as any)?.response?.status;
             if (status === 401) {
                 navigate('/login');
+                return;
             }
         }
-    }, [isError, error, navigate])
+
+        if (!isLoading && data) {
+            const userRole = data.data.data.role;
+
+            if (role === 'admin') {
+                if (userRole !== 'admin') {
+                    navigate('/login')
+                }
+            } else {
+                if (userRole === 'admin') {
+                    navigate('/admin')
+                }
+            }
+        }
+    }, [isError, error, isLoading, navigate, data, role])
 
     if (isLoading) {
-        return <Loader size="large"/>
+        return <Loader size="large" />
     }
 
     return <Fragment>{children}</Fragment>

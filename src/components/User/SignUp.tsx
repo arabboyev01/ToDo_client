@@ -15,7 +15,7 @@ export default function SignUp() {
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         setLoading(true)
-        api.createResource('tasks', values).then(data => {
+        api.createResource('auth/register', values).then(data => {
             if (data?.data?.success) {
                 setToken('userToken', data?.data?.token, {})
                 navigate('/')
