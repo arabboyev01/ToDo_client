@@ -14,11 +14,8 @@
     "ant": "^0.2.0",
     "antd": "^5.19.3",
     "axios": "^1.7.2",
-    "go-try": "^3.0.2",
-    "immer": "^10.1.1",
     "js-cookie": "^3.0.5",
     "react": "^18.3.1",
-    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.3.1",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.25.1",
@@ -53,7 +50,6 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "dotenv": "^16.4.5"
   }
 }
