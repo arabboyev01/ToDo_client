@@ -1,106 +1,46 @@
 import React, { useState } from 'react'
-import { Button, Popconfirm, Table } from 'antd'
+import { Button, Table } from 'antd'
 import EditableRow from '../context/EditableRow'
 import EditableCell from '../context/EditableCell'
+import { FieldType, TasksDataType } from '../../types/types'
+import { taskColumn, taskTable } from './config'
+import { GetMethod } from '../../api/getMethod'
+import { api } from '../../api/api'
+import ModalComponent from './CreateModal/Modal'
 
-interface DataType {
-    key: React.Key
-    name: string
-    age: string
-    address: string
-}
 
-const EditableTable: React.FC = () => {
-    const [dataSource, setDataSource] = useState<DataType[]>([
-        {
-            key: '0',
-            name: 'Edward King 0',
-            age: '32',
-            address: 'London, Park Lane no. 0',
-        },
-        {
-            key: '1',
-            name: 'Edward King 1',
-            age: '32',
-            address: 'London, Park Lane no. 1',
-        },
-    ]);
+const EditableTaskTable: React.FC = () => {
+    const [updated, setUpdated] = useState(false)
+    const [open, setOpen] = useState(false)
 
-    const [count, setCount] = useState(2);
+    const { data } = GetMethod<FieldType>('tasks/all', undefined, updated)
 
-    const handleDelete = (key: React.Key) => {
-        const newData = dataSource.filter((item) => item.key !== key);
-        setDataSource(newData);
-    };
+    const handleDelete = (id: string) => {
+        api.deleteResource('tasks', id).then(() => setUpdated(!updated))
+            .catch(err => console.log(err))
+    }
 
-    const handleAdd = () => {
-        const newData: DataType = {
-            key: count,
-            name: `Edward King ${count}`,
-            age: '32',
-            address: `London, Park Lane no. ${count}`,
-        };
-        setDataSource([...dataSource, newData]);
-        setCount(count + 1);
-    };
+    const handleAdd = (values: TasksDataType) => {
+        api.createResource<FieldType | TasksDataType>('tasks', values).then((data) => {
+            if(data.data){
+                setUpdated(!updated)
+                setOpen(false)
+            }
+        })
+        .catch(err => console.log(err))
+    }
 
-    const handleSave = (row: DataType) => {
-        const newData = [...dataSource];
-        const index = newData.findIndex((item) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, {
-            ...item,
-            ...row,
-        });
-        setDataSource(newData);
-    };
+    const handleSaveEdited = (e: TasksDataType) => {
+        api.updateResource('tasks', e._id, e).then(() => setUpdated(!updated))
+        .catch(err => console.log(err))
+    }
 
-    const defaultColumns = [
-        {
-            title: 'name',
-            dataIndex: 'name',
-            width: '30%',
-            editable: true,
-        },
-        {
-            title: 'age',
-            dataIndex: 'age',
-        },
-        {
-            title: 'address',
-            dataIndex: 'address',
-        },
-        {
-            title: 'operation',
-            dataIndex: 'operation',
-            render: (_: any, record: DataType) =>
-                dataSource.length >= 1 ? (
-                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
-                        <a>Delete</a>
-                    </Popconfirm>
-                ) : null,
-        },
-    ];
-
-    const columns = defaultColumns.map((col) => {
-        if (!col.editable) {
-            return col;
-        }
-        return {
-            ...col,
-            onCell: (record: DataType) => ({
-                record,
-                editable: col.editable,
-                dataIndex: col.dataIndex,
-                title: col.title,
-                handleSave,
-            }),
-        };
-    });
+    const columnTask = taskColumn(data?.data?.data, handleDelete, setUpdated, updated)
+    const columns = taskTable(columnTask, handleSaveEdited)
 
     return (
         <div>
-            <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
+            <Button onClick={() => setOpen(true)} type="primary" style={{ marginBottom: 16 }}>
                 Add a row
             </Button>
             <Table
@@ -112,11 +52,12 @@ const EditableTable: React.FC = () => {
                 }}
                 rowClassName={() => 'editable-row'}
                 bordered
-                dataSource={dataSource}
+                dataSource={data?.data?.data}
                 columns={columns}
             />
+            <ModalComponent onFinish={handleAdd} open={open} setOpen={setOpen}/>
         </div>
     );
 };
 
-export default EditableTable;
+export default EditableTaskTable

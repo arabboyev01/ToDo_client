@@ -9,7 +9,6 @@ type AuthProps = { children: ReactNode, role: string }
 export default function AuthComponent({ children, role }: AuthProps) {
     const { isError, isLoading, error, data } = GetMethod<FieldType>('user')
     const { navigate } = CustomRouter()
-    console.log(data?.data.data.role)
 
     useEffect(() => {
         if (isError && error) {

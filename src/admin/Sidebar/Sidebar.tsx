@@ -1,13 +1,13 @@
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import * as I from '@ant-design/icons'
 import { Button, Layout, Menu, theme } from 'antd'
 import { ButtonStyle, contentStyle, handleMenuClick, Items } from './config'
 import CustomRouter from '../../hooks/customRoute'
+import { Outlet } from 'react-router-dom'
 
 const { Header, Sider, Content } = Layout
-interface AdminPageProps { children: ReactNode }
 
-const AdminPage = ({ children }: AdminPageProps) => {
+const AdminPage = () => {
     
     const [collapsed, setCollapsed] = useState(false)
     const {
@@ -38,7 +38,7 @@ const AdminPage = ({ children }: AdminPageProps) => {
                     />
                 </Header>
                 <Content style={contentStyle(colorBgContainer, borderRadiusLG)}>
-                    {children}
+                    <Outlet />
                 </Content>
             </Layout>
         </Layout>

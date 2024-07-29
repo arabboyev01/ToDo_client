@@ -6,6 +6,8 @@ import TaskNew from "./components/Tasks/TaskNew/TaskNew"
 import AuthComponent from "./lib/authComponent"
 import AdminLayout from "./admin/AdminLayout/AdminLayout"
 import EditableTable from "./admin/Table/EditiableTable"
+import UsersList from "./admin/Users/UsersList"
+import Analytics from "./admin/Analytics/Analytics"
 
 function App() {
   return (
@@ -19,9 +21,10 @@ function App() {
       <Route path="/tasks/new" element={<AuthComponent role="user"><TaskNew /> </AuthComponent>} />
       
       {/* Admin routes */}
-      <Route path="/admin" element={<AdminLayout><EditableTable /></AdminLayout>}>
-        <Route path="users" element={<AdminLayout><h1>Admin Users</h1></AdminLayout>} />
-        <Route path="tasks" element={<AdminLayout><h1>Admin Users</h1></AdminLayout>} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Analytics />} />
+        <Route path="users" element={<UsersList />} />
+        <Route path="tasks" element={<EditableTable />} />
       </Route>
     </Routes>
   )

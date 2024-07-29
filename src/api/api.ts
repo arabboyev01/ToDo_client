@@ -8,11 +8,11 @@ interface CreateResourceOptions {
 class ApiService {
   async updateResource<T>(
     endpoint: string,
-    id: number,
+    id: string,
     data: T
   ): Promise<AxiosResponse<T>> {
     try {
-      const response = await axiosInstance.put<T>(`${endpoint}/${id}`, data);
+      const response = await axiosInstance.patch<T>(`${endpoint}/${id}`, data);
       return response;
     } catch (error) {
       throw error;
@@ -48,7 +48,7 @@ class ApiService {
 
   async deleteResource(
     endpoint: string,
-    id: number
+    id: string
   ): Promise<AxiosResponse<void>> {
     try {
       const response = await axiosInstance.delete<void>(`${endpoint}/${id}`);

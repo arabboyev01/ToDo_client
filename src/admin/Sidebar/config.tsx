@@ -3,13 +3,13 @@ import * as I from '@ant-design/icons'
 export const Items = [
     {
         key: '1',
-        icon: <I.VideoCameraOutlined />,
+        icon: <I.HomeOutlined />,
         label: 'Dashboard',
         path: '/dashboard',
     },
     {
         key: '2',
-        icon: <I.UserOutlined />,
+        icon: <I.AppstoreAddOutlined />,
         label: 'Tasks',
         path: '/tasks',
     },

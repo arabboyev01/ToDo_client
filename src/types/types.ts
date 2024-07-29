@@ -7,6 +7,21 @@ export type FieldType = {
   message?: string;
   title?: string;
   description?: string;
-  completed?: boolean
-  data?: any
+  completed?: boolean;
+  data?: any;
+  userId?: string;
 };
+export interface TasksDataType {
+  _id: string;
+  name: string;
+  age: string;
+  address: string;
+  completed: boolean
+}
+export interface StatisticsProps {
+  completedTasks: number;
+  completionRate: number;
+  email: string;
+  totalTasks: number;
+  _id: string;
+}
